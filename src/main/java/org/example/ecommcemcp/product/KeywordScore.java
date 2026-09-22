@@ -2,7 +2,7 @@ package org.example.ecommcemcp.product;
 
 public interface KeywordScore {
 
-    Long getId();
+  Long getId();
 
-    Double getScore();
+  Double getScore();
 }

@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/checkstyle-lint.sh",
+            "timeout": 90,
+            "statusMessage": "Running Checkstyle..."
+          }
+        ]
+      }
+    ]
+  }
+}
