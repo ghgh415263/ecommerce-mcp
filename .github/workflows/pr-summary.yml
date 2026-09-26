@@ -36,10 +36,11 @@ jobs:
         with:
           node-version: '24'
 
-      # 공식 설치 스크립트 사용. 설치 위치가 PATH에 잡히는지 바로 확인한다.
+      # 공식 설치 스크립트 사용. CI에는 tty가 없어 패키지 매니저 선택 프롬프트에서 실패하므로
+      # --pm으로 미리 지정한다. 설치 위치가 PATH에 잡히는지 바로 확인한다.
       - name: Bob Shell 설치
         run: |
-          curl -fsSL https://bob.ibm.com/download/bobshell.sh | bash
+          curl -fsSL https://bob.ibm.com/download/bobshell.sh | bash -s -- --pm npm
           bob --version
 
       # diff가 너무 크면 비용/컨텍스트가 커지므로 앞부분 60KB만 넘긴다.
