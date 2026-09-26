@@ -11,6 +11,7 @@ public class McpToolConfig {
 
   @Bean
   public ToolCallbackProvider productToolCallbackProvider(ProductTools productTools) {
+
     return MethodToolCallbackProvider.builder().toolObjects(productTools).build();
   }
 }
