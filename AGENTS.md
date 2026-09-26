@@ -14,7 +14,7 @@ Requires Docker (Postgres/pgvector + Ollama are started automatically via `sprin
 ./gradlew bootRun                      # run the server (also starts compose services, left running: lifecycle-management=start_only)
 ./gradlew build                        # compile + checkstyle + test
 ./gradlew test                         # run all tests
-./gradlew test --tests "EcommceMcpApplicationTests"   # run a single test class
+./gradlew test --tests "EcommerceMcpApplicationTests"   # run a single test class
 ./gradlew checkstyleMain               # lint main sources only (checkstyleTest is disabled, see below)
 ```
 
@@ -28,7 +28,7 @@ A `PostToolUse` hook (`.claude/hooks/checkstyle-lint.sh`, wired in `.claude/sett
 
 ## Architecture
 
-Single domain package: `org.example.ecommcemcp.product`. Everything (entity, repository, service, DTOs, MCP tools, seed data) lives there; `config/McpToolConfig` is the only thing outside it.
+Single domain package: `org.example.ecommercemcp.product`. Everything (entity, repository, service, DTOs, MCP tools, seed data) lives there; `config/McpToolConfig` is the only thing outside it.
 
 **MCP tool registration**: `ProductTools` methods annotated `@Tool` are wired into an MCP `ToolCallbackProvider` bean in `McpToolConfig` via `MethodToolCallbackProvider`. Adding a new tool means adding a `@Tool`-annotated method to `ProductTools` (or a new `*Tools` component picked up the same way) — there is no manual registration step beyond that.
 
@@ -41,6 +41,21 @@ Single domain package: `org.example.ecommcemcp.product`. Everything (entity, rep
 **Data model**: `Product` is the JPA entity (options are an `@ElementCollection` in a side table `product_options`). `ProductDetail`/`ProductSummary` are read-only records built via `from(Product)` factory methods — controllers/tools never expose the entity directly.
 
 **Dev seed data**: `ProductDataInitializer` (an `ApplicationRunner`, active only when `app.seed.enabled=true`) inserts `ProductSeedData.all()` products that don't already exist (matched by name) and indexes only the newly-inserted ones into the vector store.
+
+## Code comments
+
+Comments in this repo are Korean and explain *why*, not *what* — rationale, edge cases, and tuned constants (e.g. `ProductService`'s RRF weights, `ProductRepository.keywordScores`'s null-handling note, the similarity-threshold measurement comment in `application.properties`). Use `/** ... */` Javadoc on public classes/methods for this, `//` for shorter inline notes. Follow this style for new non-obvious logic; don't add comments that just restate what the code already says.
+
+## Testing rules
+
+- **Required unit tests**: entities with business methods, every service's core logic methods, schedulers, `Client` implementations. In this repo that currently means `ProductService`'s search/fusion logic — `ProductService.fuse(...)` is the extracted, pure, unit-tested case (`ProductServiceFuseTests`). `Product` has no business methods beyond getters, so it has none.
+- **Excluded from unit tests**: DTOs/records (`ProductDetail`, `ProductSummary`, `KeywordScore`), config classes (`McpToolConfig`), thin delegating layers equivalent to controllers — here that's `ProductTools`, the MCP-tool layer (covered by integration/manual MCP testing instead, not unit tests), and simple exception classes that only set `errorCode`/`message`/`httpStatus` in their constructor (none exist yet, but apply this if one is added).
+- **Framework**: JUnit 5 + AssertJ. Use `// given` / `// when` / `// then` comments. Assert exceptions with `assertThatThrownBy(...)`.
+- **`@DisplayName`**: Korean descriptive sentence.
+- **Naming**: follow this repo's existing convention, not generic Java style — test class `{ClassName}Tests` (plural, matches `ProductServiceFuseTests`, `EcommerceMcpApplicationTests`), test methods are Korean BDD-style descriptive phrases (e.g. `키워드에만_걸린_상품도_포함된다()`), never `test1()` or English camelCase verb phrases. This is exactly why `checkstyleTest` is disabled in `build.gradle` — don't re-enable it without changing this convention first.
+- Place tests under `src/test/java`, mirroring the source package structure.
+- **Integration tests**: `@SpringBootTest`, relying on the real Postgres/pgvector service from `compose.yaml` — there's no Testcontainers setup in this project (no MySQL/Redis either). Follow `EcommerceMcpApplicationTests`'s pattern: override `spring.docker.compose.skip.in-tests=false` to start compose, and turn off `app.seed.enabled` / set `spring.ai.ollama.init.pull-model-strategy=never` so seeding and model pulls don't run per-test.
+- If a test mutates shared DB/vector-store state, clean it up in `@BeforeEach` (e.g. `deleteAll()`) so tests stay independent.
 
 ## Commit messages
 
@@ -56,4 +71,4 @@ Use [Conventional Commits](https://www.conventionalcommits.org/): `<type>: <subj
 - `spring.jpa.hibernate.ddl-auto=update` — schema evolves via Hibernate, not migrations.
 - `schema.sql` only bootstraps the `pg_trgm` extension (needed for keyword search); it doesn't define tables.
 - Postgres is exposed on `15432` (not 5432) to avoid Windows' reserved port range.
-- Tests (`EcommceMcpApplicationTests`) still require the Postgres/pgvector compose service but disable seeding and Ollama model pulling via property overrides.
+- Tests (`EcommerceMcpApplicationTests`) still require the Postgres/pgvector compose service but disable seeding and Ollama model pulling via property overrides.

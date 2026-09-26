@@ -1,4 +1,4 @@
-package org.example.ecommcemcp.product;
+package org.example.ecommercemcp.product;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;

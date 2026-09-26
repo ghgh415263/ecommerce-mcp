@@ -1,6 +1,6 @@
-package org.example.ecommcemcp.config;
+package org.example.ecommercemcp.config;
 
-import org.example.ecommcemcp.product.ProductTools;
+import org.example.ecommercemcp.product.ProductTools;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.context.annotation.Bean;

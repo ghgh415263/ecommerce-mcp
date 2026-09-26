@@ -1,12 +1,12 @@
-package org.example.ecommcemcp;
+package org.example.ecommercemcp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EcommceMcpApplication {
+public class EcommerceMcpApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(EcommceMcpApplication.class, args);
+    SpringApplication.run(EcommerceMcpApplication.class, args);
   }
 }

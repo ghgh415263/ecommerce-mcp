@@ -1,4 +1,4 @@
-package org.example.ecommcemcp.product;
+package org.example.ecommercemcp.product;
 
 public record ProductSummary(
     long id, String name, String category, int price, int stock, String brand) {

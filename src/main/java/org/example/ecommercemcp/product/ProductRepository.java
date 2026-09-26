@@ -1,4 +1,4 @@
-package org.example.ecommcemcp.product;
+package org.example.ecommercemcp.product;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

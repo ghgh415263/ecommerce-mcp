@@ -1,4 +1,4 @@
-package org.example.ecommcemcp;
+package org.example.ecommercemcp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
       "app.seed.enabled=false",
       "spring.ai.ollama.init.pull-model-strategy=never"
     })
-class EcommceMcpApplicationTests {
+class EcommerceMcpApplicationTests {
 
   @Test
   void contextLoads() {}
