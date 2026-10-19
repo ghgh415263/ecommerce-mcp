@@ -36,4 +36,10 @@ public class ProductTools {
     int limit = topK == null ? DEFAULT_TOP_K : Math.max(1, Math.min(topK, MAX_TOP_K));
     return productService.hybridSearch(query, limit);
   }
+
+  @Tool(description = "상품 ID로 상품의 상세 정보(설명, 가격, 재고, 옵션 등)를 조회한다.")
+  public ProductDetail getProduct(
+      @ToolParam(description = "조회할 상품의 ID") long productId) {
+    return productService.getProductDetail(productId);
+  }
 }
