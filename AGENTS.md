@@ -12,19 +12,10 @@ Requires Docker (Postgres/pgvector + Ollama are started automatically via `sprin
 
 ```bash
 ./gradlew bootRun                      # run the server (also starts compose services, left running: lifecycle-management=start_only)
-./gradlew build                        # compile + checkstyle + test
+./gradlew build                        # compile + test
 ./gradlew test                         # run all tests
 ./gradlew test --tests "EcommerceMcpApplicationTests"   # run a single test class
-./gradlew checkstyleMain               # lint main sources only (checkstyleTest is disabled, see below)
 ```
-
-Test method names use Korean BDD-style phrases (e.g. `키워드에만_걸린_상품도_포함된다`) — quote/escape accordingly when filtering with `--tests` on a single method.
-
-`checkstyleTest` is intentionally disabled in `build.gradle` because test method names don't fit Java naming conventions.
-
-### Checkstyle hook
-
-A `PostToolUse` hook (`.claude/hooks/checkstyle-lint.sh`, wired in `.claude/settings.json`) runs `./gradlew checkstyleMain` automatically after every Write/Edit to a `.java` file and blocks with violation output. Rules are in `config/checkstyle/checkstyle.xml` (Google style, relaxed; max line length 150, no tabs, no star imports, standard whitespace/brace/naming checks). `maxWarnings = 0` in `build.gradle`, so any violation fails the build.
 
 ## Architecture
 
@@ -52,7 +43,7 @@ Comments in this repo are Korean and explain *why*, not *what* — rationale, ed
 - **Excluded from unit tests**: DTOs/records (`ProductDetail`, `ProductSummary`, `KeywordScore`), config classes (`McpToolConfig`), thin delegating layers equivalent to controllers — here that's `ProductTools`, the MCP-tool layer (covered by integration/manual MCP testing instead, not unit tests), and simple exception classes that only set `errorCode`/`message`/`httpStatus` in their constructor (none exist yet, but apply this if one is added).
 - **Framework**: JUnit 5 + AssertJ. Use `// given` / `// when` / `// then` comments. Assert exceptions with `assertThatThrownBy(...)`.
 - **`@DisplayName`**: Korean descriptive sentence.
-- **Naming**: follow this repo's existing convention, not generic Java style — test class `{ClassName}Tests` (plural, matches `ProductServiceFuseTests`, `EcommerceMcpApplicationTests`), test methods are Korean BDD-style descriptive phrases (e.g. `키워드에만_걸린_상품도_포함된다()`), never `test1()` or English camelCase verb phrases. This is exactly why `checkstyleTest` is disabled in `build.gradle` — don't re-enable it without changing this convention first.
+- **Naming**: follow this repo's existing convention, not generic Java style — test class `{ClassName}Tests` (plural, matches `ProductServiceFuseTests`, `EcommerceMcpApplicationTests`), test methods are Korean BDD-style descriptive phrases (e.g. `키워드에만_걸린_상품도_포함된다()`), never `test1()` or English camelCase verb phrases.
 - Place tests under `src/test/java`, mirroring the source package structure.
 - **Integration tests**: `@SpringBootTest`, relying on the real Postgres/pgvector service from `compose.yaml` — there's no Testcontainers setup in this project (no MySQL/Redis either). Follow `EcommerceMcpApplicationTests`'s pattern: override `spring.docker.compose.skip.in-tests=false` to start compose, and turn off `app.seed.enabled` / set `spring.ai.ollama.init.pull-model-strategy=never` so seeding and model pulls don't run per-test.
 - If a test mutates shared DB/vector-store state, clean it up in `@BeforeEach` (e.g. `deleteAll()`) so tests stay independent.
