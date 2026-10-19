@@ -17,11 +17,6 @@ public class ProductTools {
     this.productService = productService;
   }
 
-  @Tool(description = "상품 ID로 상품 상세 정보(이름, 카테고리, 가격, 재고, 브랜드, 설명, 이미지, 옵션)를 조회한다. 없으면 null을 반환한다.")
-  public ProductDetail getProduct(@ToolParam(description = "조회할 상품 ID") long productId) {
-    return productService.getProduct(productId).orElse(null);
-  }
-
   @Tool(
       description =
           "키워드(상품명 일부)와 카테고리로 상품 목록을 검색한다. 조건을 생략하면 전체 목록을 반환한다. 요약 정보만 반환하므로 상세 정보는 getProduct로 조회한다.")

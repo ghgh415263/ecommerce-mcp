@@ -38,10 +38,6 @@ public class ProductService {
     this.similarityThreshold = similarityThreshold;
   }
 
-  public Optional<ProductDetail> getProduct(long id) {
-    return productRepository.findById(id).map(ProductDetail::from);
-  }
-
   public List<ProductSummary> search(String keyword, String category) {
     return productRepository
         .search(nullToEmpty(keyword).strip(), nullToEmpty(category).strip())
