@@ -122,6 +122,11 @@ public class ProductService {
     }
   }
 
+  /** 상품 ID로 상세 정보를 조회한다. 존재하지 않으면 null을 반환한다. */
+  public ProductDetail getProductDetail(long productId) {
+    return productRepository.findById(productId).map(ProductDetail::from).orElse(null);
+  }
+
   /** 상품을 벡터 스토어에 (재)색인한다. 문서 ID가 상품 ID라서 같은 상품은 덮어쓴다. 상품을 저장/수정하는 곳에서 함께 호출해야 검색 결과가 최신으로 유지된다. */
   public void index(List<Product> products) {
     List<Document> documents =
