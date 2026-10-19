@@ -46,6 +46,11 @@ public class ProductService {
         .toList();
   }
 
+  /** 상품 ID로 상세 정보를 조회한다. 없으면 null을 반환한다. */
+  public ProductDetail getProduct(Long productId) {
+    return productRepository.findById(productId).map(ProductDetail::from).orElse(null);
+  }
+
   /** 벡터(의미) 검색과 키워드(pg_trgm) 검색 결과를 RRF로 합쳐 상위 topK개를 반환한다. */
   public List<ProductSummary> hybridSearch(String query, int topK) {
     List<Long> fusedIds =
