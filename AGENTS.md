@@ -33,7 +33,7 @@ Single domain package: `org.example.ecommercemcp.product`. Everything (entity, r
 
 **Dev seed data**: `ProductDataInitializer` (an `ApplicationRunner`, active only when `app.seed.enabled=true`) inserts `ProductSeedData.all()` products that don't already exist (matched by name) and indexes only the newly-inserted ones into the vector store.
 
-## Code comments
+## Code comments  
 
 Comments in this repo are Korean and explain *why*, not *what* — rationale, edge cases, and tuned constants (e.g. `ProductService`'s RRF weights, `ProductRepository.keywordScores`'s null-handling note, the similarity-threshold measurement comment in `application.properties`). Use `/** ... */` Javadoc on public classes/methods for this, `//` for shorter inline notes. Follow this style for new non-obvious logic; don't add comments that just restate what the code already says.
 
