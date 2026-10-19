@@ -104,7 +104,7 @@ jobs:
           # 요약만 하므로 MCP/서브에이전트는 끄고, 턴 수도 제한한다.
           # --trust: CI 러너의 빈 워크스페이스에서 신뢰 확인 프롬프트로 멈추지 않게 한다.
           bob run --workspace "${GITHUB_WORKSPACE}" --mode agent --max-cost 1 --max-turns 5 \
-            --format json --trust --disable-mcp --disable-tool-groups subagent \
+            --format json --trust --accept-license --disable-mcp --disable-tool-groups subagent \
             "$(cat prompt.txt)" > out.json
 
       # bob run --format json 출력: {"type":"result","status":"success","last_message":"...", ...}
