@@ -50,7 +50,6 @@ jobs:
           name: test-reports
           path: |
             build/reports/tests/
-            build/reports/checkstyle/
             build/test-results/
 
       - name: compose 로그 출력
